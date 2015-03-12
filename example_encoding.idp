@@ -1,0 +1,107 @@
+vocabulary V{
+   // types
+   type name
+   type ccode 
+   type sname
+   type level
+   type branch
+   type s_type // type is a keyword, so s_type
+   type s_schoolcluster // schoolcluster is a relation name, so s_schoolcluster
+   type district
+   type lang
+
+   // ideal-schema
+   pupil(name,ccode,sname)
+   class(ccode, sname, level, branch)
+   school(sname, s_schoolcluster, s_type)
+   schoolcluster(s_schoolcluster, district, lang)
+
+   // available schema
+   pupil_a(name,ccode,sname)
+   class_a(ccode, sname, level, branch)
+   school_a(sname, s_schoolcluster, s_type)
+   schoolcluster_a(s_schoolcluster, district, lang)
+
+   //frozen_constants
+   n:name
+   c:ccode
+   s:sname  
+   l:level
+   b:branch
+   t:s_type
+   sc: s_schoolcluster
+   d:district
+   ger:lang
+
+   type v_sname
+   type v_level
+   type v_district
+   type v_schoolcluster
+   //val-predicates
+   val_sname(sname, v_sname)
+   val_level(level, v_level)
+   val_district(district,v_district)
+   val_schoolcluster(s_schoolcluster, v_schoolcluster)
+}
+
+theory T:V{
+    val_sname(S,S1) & class(C,S,L,B) => ?1 V_L: val_level(L,V_L).
+    val_schoolcluster(SC,SC1) & school(S,SC,T) => ?1 V_S: val_sname(S,V_S). 
+    val_district(D,V_D) & schoolcluster(SC,D,L) => ?1 V_SC: val_schoolcluster(SC, V_SC).
+    schoolcluster(SC,D,ger) => ?1 V_D: val_district(D,V_D).
+   { pupil_a(N,C,S) <- pupil(N,C,S). }
+//   { class_a(C,S,L,B) <- class(C,S,L,B). }
+   { school_a(S,SC,T) <- school(S,SC,T).}
+   { schoolcluster_a(SC,D,L) <- schoolcluster(SC,D,L).}
+ ~? C,S,L,B,SC,T,D,S1,L1,S2,S3,SC1,D1,SC2: pupil_a(n,C,S1) & val_sname(S1,S) & class_a(C,S2,L1,B) & val_sname(S2,S) & val_level(L1,L) & school_a(S3,SC1,T) & val_sname(S3,S) & val_schoolcluster(SC1,SC) & schoolcluster(SC2,D1,ger) & val_schoolcluster(SC2,SC) & val_district(D1,D).
+}
+
+structure S:V{
+  n = n
+  c = c
+  s = s
+  l = l
+  b = b
+  sc = sc
+  t = t
+  d = d 
+  ger = ger
+  
+ v_level         = {l1;l2;l3;l4;l5;l6;l7;l8;l9;l10;
+   l11;l12;l13;l14;l15;l16;l17;l18;l19;l20;l21;l22;l23;l24;l25;l26;l27;l28;l29;l30;
+   l31;l32;l33;l34;l35;l36;l37;l38;l39;l40;l41;l42;l43;l44;l45;l46;l47;l48;l49;l50;
+   l51;l52;l53;l54;l55;l56;l57;l58;l59;l60;l61;l62;l63;l64;l65;l66;l67;l68;l69;l70;
+   l81;l82;l83;l84;l85;l86;l87;l88;l89;l90;l91;l92;l93;l94;l95;l96;l97;l98;l99;l100;
+                    }
+
+ v_sname         = {s1;s2;s3;s4;s5;s6;s7;s8;s9;s10}
+ v_schoolcluster = {sc1;sc2;sc3;sc4;sc5;sc6;sc7;sc8;sc9;sc10}
+ v_district = {d1;d2;d3;d4;d5;d6;d7;d8;d9;d10}
+ pupil = {n,c,s}
+ class = {c,s,l,b}
+ school = {s,sc,t}
+ schoolcluster = {sc,d,ger}
+
+}
+ 
+query Q:V{
+ { : ? C,S,L,B,SC,T,D,S1,L1,S2,S3,SC1,D1,SC2: pupil_a(n,C,S1) & val_sname(S1,S) & class_a(C,S2,L1,B) & val_sname(S2,S) & val_level(L1,L) & school_a(S3,SC1,T) & val_sname(S3,S) & val_schoolcluster(SC1,SC) & schoolcluster(SC2,D1,ger) & val_schoolcluster(SC2,SC) & val_district(D1,D)
+ }
+}
+ 
+include  <mx>
+procedure main(){
+   sol =  modelexpand(T,S)
+   print(sol[1])
+
+//  allsolutions = allmodels(T,S)
+// j = 0
+// for i,sol in ipairs(allsolutions) do
+//   print("\n\tQUERYING SOLUTION")
+//   print(sol)
+//   j = j + 1
+//   print("\n\tANSWER:")
+//    print(query(Q,sol))
+//  end
+// print(j)
+}

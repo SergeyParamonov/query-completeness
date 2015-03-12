@@ -1,0 +1,21 @@
+SCHEMA
+A;T1,T2
+B;T2,T3
+C;T3,T4
+END
+QUERY
+Q(X,Y,Z); A(X,Y) AND B(Y,Z) AND C(Z,H)
+END
+TC 
+A(X,Y); B(Y,Z) AND C(Z,H)
+B(Y,Z); C(Z,H)
+C(Z,H); 
+END
+FK 
+A(X,Y); B(Y,Z)
+B(Y,Z); B(Z,H)
+END
+FD 
+A(X,Y); 1; a,b,c,d,e,f
+B(X,Y); 2; 1,2,3,4,5,6,7,8,9,10
+END
