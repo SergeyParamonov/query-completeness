@@ -50,7 +50,7 @@ theory T:V{
     val_district(D,V_D) & schoolcluster(SC,D,L) => ?1 V_SC: val_schoolcluster(SC, V_SC).
     schoolcluster(SC,D,ger) => ?1 V_D: val_district(D,V_D).
    { pupil_a(N,C,S) <- pupil(N,C,S). }
-//   { class_a(C,S,L,B) <- class(C,S,L,B). }
+// { class_a(C,S,L,B) <- class(C,S,L,B). }
    { school_a(S,SC,T) <- school(S,SC,T).}
    { schoolcluster_a(SC,D,L) <- schoolcluster(SC,D,L).}
  ~? C,S,L,B,SC,T,D,S1,L1,S2,S3,SC1,D1,SC2: pupil_a(n,C,S1) & val_sname(S1,S) & class_a(C,S2,L1,B) & val_sname(S2,S) & val_level(L1,L) & school_a(S3,SC1,T) & val_sname(S3,S) & val_schoolcluster(SC1,SC) & schoolcluster(SC2,D1,ger) & val_schoolcluster(SC2,SC) & val_district(D1,D).
@@ -84,24 +84,9 @@ structure S:V{
 
 }
  
-query Q:V{
- { : ? C,S,L,B,SC,T,D,S1,L1,S2,S3,SC1,D1,SC2: pupil_a(n,C,S1) & val_sname(S1,S) & class_a(C,S2,L1,B) & val_sname(S2,S) & val_level(L1,L) & school_a(S3,SC1,T) & val_sname(S3,S) & val_schoolcluster(SC1,SC) & schoolcluster(SC2,D1,ger) & val_schoolcluster(SC2,SC) & val_district(D1,D)
- }
-}
  
 include  <mx>
 procedure main(){
    sol =  modelexpand(T,S)
    print(sol[1])
-
-//  allsolutions = allmodels(T,S)
-// j = 0
-// for i,sol in ipairs(allsolutions) do
-//   print("\n\tQUERYING SOLUTION")
-//   print(sol)
-//   j = j + 1
-//   print("\n\tANSWER:")
-//    print(query(Q,sol))
-//  end
-// print(j)
 }
